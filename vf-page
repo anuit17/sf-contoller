@@ -1,0 +1,92 @@
+<apex:page standardController="Opportunity" extensions="OpportunityEditController" title="Opportuniy Edit">
+<apex:form >
+  <apex:pageBlock title="{!Opportunity.Name}" id="pgBlock">
+      
+      <pageblockbuttons>
+      <div align="center">
+          <apex:commandButton action="{!SaveAction}" Value="Save" oncomplete="window.open('/apex/BidSelectionPage?id={!Opportunity.id}&stg={!Opportunity.StageName}','Opportunity Bids','Width=1000, height=450')"/>
+          <apex:commandButton action="{!'Save&New'}" Value="Save & New"/>
+          <apex:commandButton action="{!Cancel}" Value="Cancel"/>
+      </div>
+      </pageblockbuttons>
+      
+      <apex:actionFunction name="saveOpportunityAF" action="{!Save}"/>     
+      
+      <apex:pageBlockSection title="Opportunity Information" collapsible="False" id="pbSection">
+          <apex:inputField value="{!Opportunity.Name}"/>
+          <apex:inputField value="{!Opportunity.StageName}">
+          	<apex:actionSupport event="onchange" action="{!getprobability}"    reRender="pbSection" />
+          </apex:inputField>
+          <apex:inputField value="{!Opportunity.Account.Name}"/>
+          <apex:inputField value="{!Opportunity.Probability}"/>
+          <apex:inputField value="{!Opportunity.CloseDate}"/>
+          <apex:inputField value="{!Opportunity.LeadSource}"/>
+          <apex:inputField value="{!Opportunity.Type}"/>
+          <apex:inputField value="{!Opportunity.Opportunity_Due_Date__c}"/>
+          <apex:inputField value="{!Opportunity.Technology__c   }"/>
+          <apex:inputField value="{!Opportunity.Feedback_Date__c}"/>
+          <apex:inputField value="{!Opportunity.Market__c}"/>
+          <apex:inputField value="{!Opportunity.PPA_Closing_Date__c}"/>
+          <apex:inputField value="{!Opportunity.Opportunity_COD__c}"/>
+          <apex:inputField value="{!Opportunity.NextStep}" required="true"/>
+          <apex:inputField value="{!Opportunity.MWs__c}"/>
+          <apex:inputField value="{!Opportunity.Loss_Reason__c}"/>
+          <apex:inputField value="{!Opportunity.MWs_of_Storage__c}"/>
+          <apex:inputField value="{!Opportunity.Owner.Name}" label="Opportunity Owner"/>
+          <apex:inputField value="{!Opportunity.State__c}"/>
+          <apex:inputField value="{!Opportunity.Priority__c}"/>
+          <apex:inputField value="{!Opportunity.Dev_Lead__c}"/>
+          <apex:inputField value="{!Opportunity.Fin_Lead__c}"/>
+          <apex:inputField value="{!Opportunity.PPA_Duration__c}"/>
+      </apex:pageBlockSection>
+      
+      <apex:pageblockSection title="Legal" collapsible="False">
+          <apex:inputField value="{!Opportunity.Legal_Lead_Internal__c}"/>
+          <apex:inputField value="{!Opportunity.Current_Legal_Status__c }"/>
+          <apex:inputField value="{!Opportunity.Outside_Counsel__c}"/>
+          <apex:inputField value="{!Opportunity.Legal_Next_Step__c}"/>
+          <apex:inputField value="{!Opportunity.Contract_Pocession__c}"/>
+          <apex:inputField value="{!Opportunity.Date_of_Last_Draft__c}"/>
+      </apex:pageblockSection>
+      
+      <apex:pageblockSection title="Power Marketing Pricing" collapsible="False">
+          <apex:inputField value="{!Opportunity.Pricing_Summary_Link__c}"/>
+          <apex:inputField value="{!Opportunity.Pricing_Summary_Text__c}"/>
+          <apex:inputField value="{!Opportunity.Project_LCOE__c}"/>
+          <apex:inputField value="{!Opportunity.Market_Clearing_Price__c}"/>
+      </apex:pageblockSection>
+      
+      <apex:pageblockSection title="Additional Information" collapsible="False">
+          <apex:inputField value="{!Opportunity.Description}"/>
+      </apex:pageblockSection>
+      
+      <apex:pageblockSection title="Reporting" collapsible="False">
+          <apex:inputField value="{!Opportunity.Opportunity_Overview__c}"/>
+          <div>
+          <apex:inputField value="{!Opportunity.Post_Bid_Summary__c}"/>
+          </div>
+      </apex:pageblockSection>
+      
+      <apex:pageblockSection title="M&A" collapsible="False">
+          <apex:inputField value="{!Opportunity.PPA_Price__c}"/>
+          <div>
+          <apex:inputField value="{!Opportunity.PPA_Counterparty__c}"/>
+          </div>
+      </apex:pageblockSection>
+      
+      <pageblockbuttons>
+      <div align="center">
+          <apex:commandButton action="{!SaveAction}" Value="Save" oncomplete="window.open('/apex/BidSelectionPage?id={!Opportunity.id}&stg={!Opportunity.StageName}','Opportunity Bids','Width=1000, height=450')"/>
+          <apex:commandButton action="{!'Save&New'}" Value="Save & New"/>
+          <apex:commandButton action="{!Cancel}" Value="Cancel"/>
+      </div>
+      </pageblockbuttons>
+      
+    </apex:pageBlock>
+    <script>
+        function saveOpportunity(){
+        saveOpportunityAF();
+    }
+    </script>
+</apex:form>
+</apex:page>
