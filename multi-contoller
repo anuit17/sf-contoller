@@ -1,0 +1,48 @@
+public class MultiProjectsecletCntrl {
+    public string OpportunityId {get; set;}
+    public string searchString {get; set;}
+    public List<projectWrapper> projectinfo {get;set;}
+    public class projectWrapper {
+        public Project__c u {get;private set;}
+        public Boolean selected {get;set;}
+    }
+    public MultiProjectsecletCntrl()
+    {
+        OpportunityId=ApexPages.currentPage().getParameters().get('id');
+        projectinfo = new List<projectWrapper>();
+        for(Project__c pr : [Select Id,Name from Project__c limit 10]){
+            projectWrapper prt = new projectWrapper();
+            prt.u = pr;
+            prt.selected = false;
+            projectinfo.add(prt);
+        }
+    }
+    public PageReference processSelected() {
+        List<string> projcetNames=new List<string>();
+        for(projectWrapper ul : projectinfo)
+        {
+            if(ul.selected == true)
+            {
+                projcetNames.add(ul.u.Name);
+                system.debug('projcetNames=='+projcetNames);
+            }
+        }
+        string allstring = string.join(projcetNames,',');
+        Opportunity opp=new Opportunity();
+        opp.id=OpportunityId;
+        opp.Multiple_Projects__c=allstring;
+        update opp;
+        return null;
+    }
+    public void Searchprojects()
+    {
+        String serchname= '%'+searchString+'%';
+        projectinfo.clear();
+        for(Project__c pr : [Select Id,Name from Project__c Where Name like : serchname]){
+            projectWrapper prt = new projectWrapper();
+            prt.u = pr;
+            prt.selected = false;
+            projectinfo.add(prt);
+        }
+    }
+}
