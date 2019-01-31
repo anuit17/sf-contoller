@@ -1,0 +1,57 @@
+public class OpportunityEditController {
+    public opportunity opp {get; set;}
+    private apexpages.standardcontroller sc;
+    
+    public OpportunityEditController(apexpages.standardcontroller sc){
+        this.sc = sc;
+    }
+    
+    public pageReference SaveAction(){
+        opp = (opportunity)sc.getrecord();
+        if(opp.stageName == 'Closed Won' || opp.stageName == 'Shortlisted' ){
+            return null;
+        } else {
+            pageReference detailpage = save();
+            if(detailpage != null){
+                List<Opportunity_Bid__c> opbidlst=[select Id, Name, ProjectName__c, Term__c,Bid_Status__c, PPA_Price_Submitted__c, Opportunity__r.StageName from Opportunity_Bid__c Where Opportunity__c = :opp.Id];
+                for(Opportunity_Bid__c opbid : opbidlst)
+                {
+                    if(opp.stageName == 'Closed Lost'){
+                        if(opbid.Bid_Status__c == 'Shortlisted')
+                            opbid.Bid_Status__c = 'Shortlisted Lost';
+                        else
+                            opbid.Bid_Status__c = 'Not Selected';
+                    }
+                    else if(opp.stageName == 'Cancelled')
+                        opbid.Bid_Status__c = 'Cancelled';
+                    else if(opp.stageName == 'Shortlist Lost')
+                        if(opbid.Bid_Status__c == 'Shortlisted')
+                        opbid.Bid_Status__c = 'Shortlisted Lost';
+                    else if(opp.stageName == 'Won Cancelled')
+                        opbid.Bid_Status__c = 'Won Cancelled';
+                    else if(opp.stageName == 'Lost Negotiation')
+                        opbid.Bid_Status__c = 'Lost Negotiation';
+                    
+                    if(opp.stageName == 'Passed / Dead')
+                        opbid.Bid_Status__c = 'Passed / Dead';
+                }
+                update opbidlst;
+            }
+            return detailpage;
+        }
+        
+    }
+    
+    public PageReference Save(){
+        PageReference detailPage = sc.save();
+        return detailPage;
+    }
+    public PageReference getprobability()
+    {
+        opp = (opportunity)sc.getrecord();
+        if(opp.StageName == 'Pending Proposal' || opp.StageName == 'Pending RFP')
+            opp.Probability=5;
+        else if(opp.StageName == 'Won Cancelled')
+            opp.Probability=0;
+        return null;
+    }
