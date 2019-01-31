@@ -1,0 +1,38 @@
+<apex:page controller="MultiProjectsecletCntrl" showheader="fasle" sidebar="false">
+    <apex:form >
+        
+        <apex:pageBlock >
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Select projects"  rerender="table" action="{!processSelected}" oncomplete="window.opener.renderpage(); window.top.close();" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection >
+                <apex:outputPanel id="top" layout="block" style="margin:5px;padding:10px;padding-top:2px;">
+                    <apex:outputLabel value="Search" style="font-weight:Bold;padding-right:10px;" for="txtSearch"/>
+                    <apex:inputText id="txtSearch" value="{!searchString}" />
+                    <span style="padding-left:5px"><apex:commandButton id="btnGo" value="Go" action="{!Searchprojects}" rerender="table"></apex:commandButton></span>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:pageBlockTable value="{!projectinfo}" var="ob" id="table">
+                <apex:column >
+                    <apex:inputCheckbox value="{!ob.selected}" />
+                </apex:column>
+                <apex:column value="{!ob.u.Name}"/>
+                
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <Script>
+        function checkbox(sCheckbox){
+        console.log('in fucntion...');
+        var elements = document.getElementsByTagName('input');
+        for(var i=0; i<elements.length;i++){
+                                             console.log('in for...');
+                                             if(elements[i].type == 'checkbox'){
+                                             console.log('in if....');
+                                             elements[i].checked = false;
+                                             }
+                                             }
+                                             sCheckbox.checked = true;
+                                             }
+                                             </Script>
+        </apex:page>
