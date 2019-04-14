@@ -1,0 +1,69 @@
+@isTest
+public class BidSelectionControllerTest{
+    static opportunity oppor;
+    static Project__c proj;
+    static Opportunity_Bid__c oppbid;
+    
+    static testmethod void testmethod_1()
+    {
+        oppor=Data_Factory.createopportunity('Test','Closed Won','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        PageReference pageRef = Page.BidSelectionPage;
+        pageRef.getParameters().put('id',oppor.Id);
+        pageRef.getParameters().put('stg',oppor.stageName);
+        Test.setCurrentPage(pageRef); 
+        BidSelectionController bidSelect=new BidSelectionController();
+        bidSelect.getBids();
+        PageReference pageRefs = Page.OpportunityView;
+        pageRefs.getParameters().put('id',oppor.Id);
+        Test.setCurrentPage(pageRefs); 
+        bidSelect.processSelected();
+        bidSelect.getheaderString();
+    }
+/*
+public static BidSelectionController bsc;
+public static Account acc;
+Public static Opportunity opp;
+public static project__c proj;
+public static pageReference viewPR;
+
+    @testSetup
+    public static void DataCreation(){
+        acc = new Account(name = 'TestAccount', Industry = 'ESP', Type = 'Other');
+        insert acc;
+        opp = new Opportunity(name = 'TestOpp', Accountid = acc.id, CloseDate = system.Today()-1, stageName = 'Shortlisted', Market__c = 'PJM' );
+        insert opp;
+        proj = new project__c(name = 'TestProject');
+        insert proj;
+        
+        List<Opportunity_Bid__c> oppBidList = new List<Opportunity_Bid__c>();
+        for(integer i=0;i<5;i++){
+        Opportunity_Bid__c obTemp = new Opportunity_Bid__c(Term__c = 12+i, Bid_status__c = 'Shortlisted', Escalator__c = 25, ProjectName__c = proj.id, Broker_Fee_Premium__c = 100, MWac_Offered__c = 10, Opportunity__c = opp.id);
+        oppBidList.add(obTemp);
+        }
+        insert oppBidList;
+    }
+    
+    public static testMethod void OppBidStatusUpdate(){
+    opp = [select id, name, Accountid, stageName, Market__c, CloseDate from Opportunity limit 1];
+    viewPR = new pageReference('/apex/BidSelectionPage?id='+opp.id+'&stg='+opp.stageName);
+    bsc = new BidSelectionController();
+    test.setcurrentpage(viewPR);
+        
+    List<BidSelectionController.OppBid> obList = bsc.getBids();
+    obList[0].selected = true;
+    bsc.processSelected();
+    }*/
+}
