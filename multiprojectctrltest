@@ -1,0 +1,26 @@
+@isTest
+public class MultiProjectsecletCntrlTest {
+	static opportunity oppor;
+    static Project__c proj;
+    
+    static testmethod void testmethod_1()
+    {
+        oppor=Data_Factory.createopportunity('Test','Cancelled','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        PageReference pageRef = Page.MultipleProjectselect;
+        pageRef.getParameters().put('id',oppor.Id);
+        Opp_Bid_settings__c op=new Opp_Bid_settings__c();
+        op.Bid_Status_check__c=false;
+        op.Multiple_Projects__c='';
+        insert op;
+        Test.setCurrentPage(pageRef); 
+        MultiProjectsecletCntrl bidSelect=new MultiProjectsecletCntrl();
+        bidSelect.searchString='New';
+        bidSelect.Searchprojects();
+        bidSelect.processSelected();
+    }
+}
