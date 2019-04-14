@@ -1,0 +1,79 @@
+public class BidSelectionController {
+    
+    public BidSelectionController(){
+        OpportunityId = Apexpages.currentpage().getparameters().get('id');
+        OppStage = Apexpages.currentpage().getparameters().get('Stg');    
+    }
+    
+    public class OppBid {
+        public Opportunity_Bid__c bid {get; set;}
+        public Boolean selected {get; set;}
+        
+        
+        public OppBid(Opportunity_Bid__c ob) {
+            Bid = ob;
+            selected = false;
+        }
+    }
+    public string OpportunityId {get; set;}
+    public string OppStage {get; set;}
+    public List<OppBid> BidList {get; set;}
+    
+    public string getheaderString(){
+        string headerString;
+        if(oppStage == 'Closed Won')
+        {
+            headerString = 'Which bids you want to close win?';
+        } else {
+            headerString = 'Which bids you want to Shortlist?';
+        }
+        return headerString;
+    }
+    
+    //This method uses a simple SOQL query to return a List of Contacts
+    public List<OppBid> getBids() {
+        
+        string queryString = 'select Id, Name, ProjectName__c, Term__c,Bid_Status__c, PPA_Price_Submitted__c, Opportunity__r.StageName from Opportunity_Bid__c Where Opportunity__c = :OpportunityId';
+        if(oppStage == 'Closed Won'){
+            queryString += ' AND Bid_Status__c = \'Shortlisted\'';
+        }
+        
+        if(BidList == null) {
+            BidList = new List<OppBid>();
+            for(Opportunity_Bid__c ob: database.query(queryString)) 
+            {
+                BidList.add(new OppBid(ob));
+            }
+        }
+        return BidList;
+    }
+    
+    
+    public PageReference processSelected() {
+        
+        List<Opportunity_Bid__c> selectedBids = new List<Opportunity_Bid__c>();
+        pageReference OppviewPage = new pageReference('/apex/OpportunityView?id='+OpportunityId);
+        for(OppBid sBid: getBids()) {
+            system.debug('Opp bid info=='+sBid);
+            if(sBid.selected == true) {
+                if(OppStage == 'Closed Won')
+                    sBid.Bid.Bid_Status__c = 'Closed Won';
+                else if(OppStage == 'Shortlisted')
+                    sBid.Bid.Bid_Status__c = 'Shortlisted';
+                selectedBids.add(sBid.Bid);
+            }else if(sBid.selected == false){
+              /*  if(OppStage == 'Closed Won')
+                    sBid.Bid.Bid_status__c = 'Lost';
+                else if(Oppstage == 'Shortlisted')*/
+                    sBid.Bid.Bid_Status__c = 'Not Selected';
+                selectedBids.add(sBid.Bid);
+            }
+        }
+        Update selectedBids;
+        Opp_Bid_settings__c opst = Opp_Bid_settings__c.getOrgDefaults();
+        opst.Bid_Status_check__c=false;
+        update opst;
+        return null;
+    }
+    
+}
