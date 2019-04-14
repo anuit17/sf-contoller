@@ -1,0 +1,221 @@
+@isTest
+public class OpportunityEditControllerTest {
+    static opportunity oppor;
+    static Project__c proj;
+    static Opportunity_Bid__c oppbid;
+    
+    static testmethod void testmethod_1()
+    {
+        oppor=Data_Factory.createopportunity('Test','Cancelled','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Cancelled',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController sc = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedit=new OpportunityEditController(sc);
+        oppedit.SaveAction();
+        oppor.StageName='Won Cancelled';
+        update oppor;
+        oppedit.getprobability();
+    }
+    static testmethod void testmethod_2()
+    {
+        oppor=Data_Factory.createopportunity('Test','Closed Won','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_3()
+    {
+        oppor=Data_Factory.createopportunity('Test','Shortlist Lost','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppor.StageName='Pending Proposal';
+        update oppor;
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_4()
+    {
+        oppor=Data_Factory.createopportunity('Test','Closed Lost','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_5()
+    {
+        oppor=Data_Factory.createopportunity('Test','Lost Negotiation','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_6()
+    {
+        oppor=Data_Factory.createopportunity('Test','Won Cancelled','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Closed Won',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_7()
+    {
+        oppor=Data_Factory.createopportunity('Test','Won Cancelled','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_8()
+    {
+        oppor=Data_Factory.createopportunity('Test','Passed / Dead','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_9()
+    {
+        oppor=Data_Factory.createopportunity('Test','Lost Negotiation','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Shortlisted',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+    static testmethod void testmethod_10()
+    {
+        oppor=Data_Factory.createopportunity('Test','Closed Lost','Other',system.today(),'CAISO');
+        oppor.Loss_Reason__c='price';
+        oppor.Post_Bid_Summary__c='Price';
+        insert oppor;
+        proj=Data_Factory.createProject('New project','Complete','Yes');
+        insert proj;
+        oppbid=Data_Factory.createOpportunityBid('Cancelled',123,oppor.Id,'Other',proj.Id);
+        oppbid.Term__c=90;
+        oppbid.Escalator__c=20;
+        oppbid.MWac_Offered__c=90;
+        insert oppbid;
+        Opp_Bid_settings__c opbidset= new Opp_Bid_settings__c();
+        opbidset.Bid_Status_check__c=true;
+        insert opbidset;
+        ApexPages.StandardController scs = new ApexPages.StandardController(oppor);
+        OpportunityEditController oppedits=new OpportunityEditController(scs);
+        oppedits.SaveAction();
+        oppedits.getprobability();
+    }
+}
