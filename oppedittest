@@ -1,0 +1,37 @@
+@isTest
+public class OpportunityEditTest{
+public static OpportunityEditController oec;
+public static Opportunity opp;
+public static Account acc;
+
+
+    @testSetup
+    public static void DataCretion(){
+        acc = new Account(name = 'TestAccount', Industry = 'ESP', Type = 'Other');
+        insert acc;
+        opp = new Opportunity(name = 'TestOpp', Accountid = acc.id, CloseDate = system.Today()-1, stageName = 'Pending RFP', Market__c = 'PJM' );
+        insert opp;
+    }
+    
+    public static TestMethod void BidPopup(){
+        opp = [select id, Name from Opportunity limit 1];
+        pageReference pr = new pageReference('/apex/OpportunityEdit?id=opp.id');
+        apexpages.standardController sc = new apexpages.standardController(opp);
+         Opp_Bid_settings__c op=new Opp_Bid_settings__c();
+        op.Bid_Status_check__c=false;
+        op.Multiple_Projects__c='';
+        insert op;
+        test.setcurrentpage(pr);
+        oec = new OpportunityEditController(sc);  
+        opp.stageName = 'Closed Won';
+        oec.saveAction();
+        
+        opp.stageName = 'Shortlisted';
+        oec.saveAction();
+        
+        opp.stageName = 'Qualification';
+        oec.saveAction();
+
+    }
+
+}
