@@ -1,0 +1,32 @@
+@isTest
+public class Data_Factory {
+
+    public static opportunity createopportunity(string Name,string StageName,string Type,Date CloseDate,string Market)
+    {
+        opportunity opp=new opportunity();
+        opp.Name=Name;
+        opp.StageName=StageName;
+        opp.Type=Type;
+        opp.CloseDate=CloseDate;
+        opp.Market__c=Market;
+        return opp;
+    }
+    public static Opportunity_Bid__c createOpportunityBid(string Bid_Status,Decimal Broker_Fee_Premium,Id Opportunity,string REC_Type,Id ProjectId)
+    {
+        Opportunity_Bid__c oppbid=new Opportunity_Bid__c();
+        oppbid.Bid_Status__c=Bid_Status;
+        oppbid.Broker_Fee_Premium__c=Broker_Fee_Premium;
+        oppbid.Opportunity__c=Opportunity;
+        oppbid.REC_Type__c=REC_Type;
+        oppbid.ProjectName__c=ProjectId;
+        return oppbid;
+    }
+    public static Project__c createProject(String Name,string Geotech,string CIA)
+    {
+        Project__c prj=new Project__c();
+        prj.Name=Name;
+        prj.CIA__c=CIA;
+        prj.Geotech__c=Geotech;
+        return prj;
+    }
+}
