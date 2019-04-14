@@ -1,0 +1,68 @@
+public class MultiProjectsecletCntrl {
+    public string OpportunityId {get; set;}
+    public string searchString {get; set;}
+    public List<projectWrapper> projectinfo {get;set;}
+    public class projectWrapper {
+        public Project__c u {get;private set;}
+        public Boolean selected {get;set;}
+    }
+    //default constructor
+    public MultiProjectsecletCntrl()
+    {
+        OpportunityId=ApexPages.currentPage().getParameters().get('id');
+        system.debug('OpportunityId=='+OpportunityId);
+        projectinfo = new List<projectWrapper>();
+        for(Project__c pr : [Select Id,Name from Project__c limit 10]){
+            projectWrapper prt = new projectWrapper();
+            prt.u = pr;
+            prt.selected = false;
+            projectinfo.add(prt);
+        }
+    }
+    public PageReference processSelected() {
+        List<string> projcetNames=new List<string>();
+        for(projectWrapper ul : projectinfo)
+        {
+            if(ul.selected == true)
+            {
+                projcetNames.add(ul.u.Name);
+                system.debug('projcetNames=='+projcetNames);
+            }
+        }
+        Opp_Bid_settings__c opst = Opp_Bid_settings__c.getOrgDefaults();
+        system.debug('opst=='+opst);
+        string allstring = string.join(projcetNames,',');
+        if(OpportunityId != null){
+            Opportunity opps=[select id,Multiple_Projects__c from Opportunity where id= : OpportunityId];
+            Opportunity opp=new Opportunity();
+            opp.id=OpportunityId;
+            if(opps.Multiple_Projects__c != null){
+                opst.Multiple_Projects__c=opps.Multiple_Projects__c+','+allstring;
+                update opst;
+            }
+            else 
+            {
+                opst.Multiple_Projects__c=allstring;
+                update opst;
+            }
+        }
+        else
+        {
+            opst.Multiple_Projects__c=allstring;
+            update opst;
+            system.debug('opst='+opst);
+        }
+        return null;
+    }
+    public void Searchprojects()
+    {
+        String serchname= '%'+searchString+'%';
+        projectinfo.clear();
+        for(Project__c pr : [Select Id,Name from Project__c Where Name like : serchname]){
+            projectWrapper prt = new projectWrapper();
+            prt.u = pr;
+            prt.selected = false;
+            projectinfo.add(prt);
+        }
+    }
+}
